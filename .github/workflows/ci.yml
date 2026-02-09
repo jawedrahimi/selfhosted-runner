@@ -1,0 +1,39 @@
+name: LF CI Smoke (exit code)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  lf-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system deps (C target)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl
+
+      - name: Install Lingua Franca CLI (lfc)
+        run: |
+          curl -Ls https://install.lf-lang.org | bash -s cli
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          lfc --version
+
+      - name: Compile LF program
+        run: |
+          lfc test_lf_programs/DeadlinePass.lf
+
+      - name: Run compiled binary (exit 0 = pass)
+        run: |
+          BIN="$(find . -type f -name 'DeadlinePass' -perm -111 | head -n 1)"
+          echo "Binary: $BIN"
+          test -n "$BIN"
+          "$BIN"

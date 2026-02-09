@@ -1,0 +1,37 @@
+target C {
+    timeout: 2 sec
+  }
+  
+  main reactor {
+    reaction(startup) {=
+      #include <stdio.h>
+      #include <time.h>
+      #include <unistd.h>
+      #include <stdlib.h>
+  
+      // Start time
+      struct timespec t0, t1;
+      clock_gettime(CLOCK_MONOTONIC, &t0);
+  
+      // Simulated work (should be under deadline)
+      usleep(50 * 1000); // 50 ms
+  
+      // End time
+      clock_gettime(CLOCK_MONOTONIC, &t1);
+  
+      long elapsed_ms =
+        (t1.tv_sec - t0.tv_sec) * 1000 +
+        (t1.tv_nsec - t0.tv_nsec) / 1000000;
+  
+      long deadline_ms = 200;
+  
+      if (elapsed_ms <= deadline_ms) {
+        printf("PASS: %ld ms <= %ld ms deadline\n", elapsed_ms, deadline_ms);
+        return 0;   // PASS
+      } else {
+        fprintf(stderr, "FAIL: %ld ms > %ld ms deadline\n", elapsed_ms, deadline_ms);
+        return 1;   // FAIL
+      }
+    =}
+  }
+  

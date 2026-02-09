@@ -1,0 +1,11 @@
+target C {
+  timeout: 1 sec
+}
+
+main reactor {
+  reaction(startup) {=
+    // If the program runs, we consider it a pass:
+    printf("LF CI test: PASS\n");
+    exit(0);
+  =}
+}
