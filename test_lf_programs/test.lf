@@ -3,9 +3,8 @@ target C {
 }
 
 main reactor {
-  reaction(startup) {=
-    // If the program runs, we consider it a pass:
-    printf("LF CI test: PASS\n");
-    exit(0);
+  reaction(startup) {= // This reaction will run once at startup
+    printf("LF CI test: PASS\n"); 
+    exit(0); // Exit with status 0 to indicate success otherwise it fails with a timeout and exits with status 1
   =}
 }
