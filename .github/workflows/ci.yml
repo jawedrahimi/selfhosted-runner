@@ -1,4 +1,4 @@
-name: LF CI Smoke (exit code)
+name: LF Tests
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lf-smoke:
+  lf-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
